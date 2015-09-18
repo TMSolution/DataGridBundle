@@ -9,7 +9,8 @@
                         {{ grid_actions(grid) }}
                     {% endif %}
                 </div>
-                <div class="grid_body table-responsive" style='overflow-y: auto; overflow-x: auto;'>
+                <div class="grid_body">
+                    <div class="table-responsive" style="overflow: initial">
                     <table class="table table-striped table-hover table-full-width">
                         {% if grid.isTitleSectionVisible %}
                             {{ grid_titles(grid) }}
@@ -20,6 +21,7 @@
                         {% endif %}
                         {{ grid_rows(grid) }}
                     </table>
+                    </div>
                 </div>
                 <div class="row grid_footer form-inline col-sm-12">
 
