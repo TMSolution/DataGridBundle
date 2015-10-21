@@ -189,23 +189,20 @@
                                 {% if pagerfanta %}
                                     {{ grid_pagerfanta(grid) }}
                                 {% else %}
-                                    <div class="row">
-                                        <div class="col-sm-3 col-md-3">
+                                        <div class="col-sm-2">
                                             <h5>{{ grid_pager_totalcount(grid) }}</h5> 
                                         </div>
-                                        <div class="col-sm-3 col-md-3 ">
+                                        <div class="col-sm-3 text-center">
                                             {% if grid.exports|length > 0 %}
                                                 {{ grid_exports(grid) }}
                                             {% endif %}
                                         </div>
-                                        <div class="col-sm-3 col-md-3">
+                                        <div class="col-sm-3 text-center">
                                             {{ grid_pager_results_perpage(grid) }}
                                         </div>
-                                        <div class="col-sm-3 col-md-3">
+                                        <div class="col-sm-4">
                                             {{ grid_pager_selectpage(grid) }}
                                         </div>
-                                    </div>
-
 
                                 {% endif %}
 
