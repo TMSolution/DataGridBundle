@@ -1,5 +1,42 @@
 {# ------------------------------------------------------ grid ------------------------------------------------------ #}
 {% block grid %}
+
+    <div class="grid-modal modal fade">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Zamknij"><span aria-hidden="true">&times;</span></button>
+                    <h6 class="modal-title">Potwierdzenie operacji</h6>
+                </div>
+                <div class="modal-body">
+                    <p style="font-weight: bold;"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Zrezygnuj</button>
+                    <button type="button" class="btn btn-primary">Potwierdź</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div class="grid-modal2 modal fade">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Zamknij"><span aria-hidden="true">&times;</span></button>
+                    <h6 class="modal-title">Ponowne potwierdzenie operacji</h6>
+                </div>
+                <div class="modal-body">
+                    <p style="font-weight: bold;"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Zrezygnuj</button>
+                    <button type="button" class="btn btn-danger">Potwierdź</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
     <div class="grid">
         {% if grid.totalCount > 0 or grid.isFiltered or grid.noDataMessage is sameas(false) %}
             <form id="{{ grid.hash }}" action="{{ grid.routeUrl }}" method="get">
@@ -324,11 +361,38 @@
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
-
+                                        <script type="text/javascript">
+                                            {#return confirm('{{ action.confirmMessage }}')#}
+                                            function gridOpenModal(link, text, secure) {
+                                                var url = jQuery(link).attr("href");
+                                                var secure = jQuery(link).hasClass('secure');
+                                                var modal = jQuery(".grid-modal");
+                                                var modal2 = jQuery(".grid-modal2");
+                                                modal.find(".modal-body p").text(text);
+                                                modal2.find(".modal-body p").text(text);
+                                                modal.one('click', '.modal-footer .btn-primary', function(e) {
+                                                    if (secure === true) {
+                                                        modal.modal('hide');
+                                                        modal2.one('click', '.modal-footer .btn-danger', function (e) {
+                                                            window.location.replace(url);
+                                                        }).one('click', '.modal-header .close, .modal-footer .btn-default', function (e) {
+                                                            e.preventDefault();
+                                                        });
+                                                        modal2.modal();
+                                                    } else {
+                                                        window.location.replace(url);
+                                                    }
+                                                }).one('click', '.modal-header .close, .modal-footer .btn-default',  function(e) {
+                                                    e.preventDefault();
+                                                });
+                                                modal.modal();
+                                                return false;
+                                            }
+                                        </script>
                                         {% set actions = column.getActionsToRender(row) %}
 
                                         {% for action in actions %}
-                                            <li><a href="{{ url(action.route, column.routeParameters(row, action), false) }}" target="{{ action.target }}"{% if action.confirm %} onclick="return confirm('{{ action.confirmMessage }}')"{% endif %}{% for name, value in action.attributes %} {{ name }}="{{ value }}" {% endfor %}><i class ='{{ action.title }}'></i> {{ action.displayTitle }}</a></li>
+                                            <li><a href="{{ url(action.route, column.routeParameters(row, action), false) }}" target="{{ action.target }}"{% if action.confirm %} onclick="gridOpenModal(this, '{{ action.confirmMessage }}', false); return false;"{% endif %}{% for name, value in action.attributes %} {{ name }}="{{ value }}" {% endfor %}><i class ='{{ action.title }}'></i> {{ action.displayTitle }}</a></li>
                                             {% endfor %}
                                     </ul>
                                 </div>
