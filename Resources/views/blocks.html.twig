@@ -200,7 +200,7 @@
                                                             {%if value %}
                                                                 {{value|raw}}
                                                             {% else %}
-                                                                <span style='color:#aaa;' >--</span>
+                                                                <span style='color:#aaa;' ></span>
                                                             {% endif %}
 
 
@@ -408,7 +408,11 @@
                             {# ------------------------------------------------ grid_array_columns --------------------------------------------- #}
                             {% block grid_column_array_cell %}
                                 {% set sourceValues = row.field(column.id) %}
-                                {% set values = value %}
+                                
+                                {% set values = value %}                                
+                                {% if values is not iterable %}
+                                    {{ values }}
+                                {% endif %}
                                 {% for key, index in values -%}
                                     {% set value = index %}
                                     {% set sourceValue = sourceValues[key] %}
@@ -422,9 +426,9 @@
                                                 {% set sourceValue = sourceValue is defined ? sourceValue : row.field(column.id) %}
                                                 <a href="?{{ grid.hash }}[{{ column.id }}][from]={{ sourceValue | url_encode() }}" class="searchOnClick">{{ value }}</a>
                                             {% elseif column.safe is sameas(false) %}
-                                                {{ value|raw }}
+                                                {{ value|trans|raw }}
                                             {% else %}
-                                                {{ value|escape(column.safe)|raw }}
+                                                {{ value|trans|escape(column.safe)|raw }}
                                             {% endif %}
                                             {% endspaceless -%}
                                                 {% endblock grid_column_cell %}
